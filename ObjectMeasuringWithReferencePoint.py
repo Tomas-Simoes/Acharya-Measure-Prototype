@@ -5,7 +5,8 @@ from object_detector import *
 
 
 useReferencePoint = True;
-imagePath = "images/wallWithMarker.jpeg" if useReferencePoint else "images/wall.jpeg" 
+#imagePath = "Test Images/wallWithMarker.jpeg" if useReferencePoint else "Test Images/wall.jpeg" 
+imagePath = "Raw Images/32301- R.Vaz Monteiro Carregado/Windows/ENV15.jpg"
 
 def init():
   image = getImage()
@@ -36,7 +37,7 @@ def recognizeObjectsInHomogeneousBackground(img):
     cv2.circle(img, (int(x), int(y)), 5, (0, 0, 255), -1)
 
 def recognizeObjects(img):
-  model = YOLO("yolov8m-seg.pt")
+  model = YOLO("Models/best.pt")
   #model.train(data="data.yaml", epochs=30)
   result = model.predict(img)[0]
   box = result.boxes[0]
