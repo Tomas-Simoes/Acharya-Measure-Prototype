@@ -36,7 +36,7 @@ def recognizeObjectsInHomogeneousBackground(img):
     cv2.circle(img, (int(x), int(y)), 5, (0, 0, 255), -1)
 
 def recognizeObjects(img):
-  model = YOLO("yolov8m.pt")
+  model = YOLO("yolov8m-seg.pt")
   #model.train(data="data.yaml", epochs=30)
   result = model.predict(img)[0]
   box = result.boxes[0]
