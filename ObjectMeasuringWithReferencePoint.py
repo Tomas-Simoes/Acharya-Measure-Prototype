@@ -27,19 +27,12 @@ def getImage():
   return _img
 
 
-def recognizeObjectsInHomogeneousBackground(img):
-  detector = HomogeneousBgDetector()
-  objects_coordinates = detector.detect_objects(img)
-
-  for coordinate in objects_coordinates:
-    cv2.polylines(img, [coordinate], True, (255, 0, 255))
-    (x, y), (w, h), angle = cv2.minAreaRect(coordinate)
-    cv2.circle(img, (int(x), int(y)), 5, (0, 0, 255), -1)
-
 def recognizeObjects(img):
   model = YOLO("Models/best.pt")
-  #model.train(data="data.yaml", epochs=30)
+  #model.train(data="data.yaml", epochs=150)
   result = model.predict(img)[0]
+
+
   box = result.boxes[0]
   
   for box in result.boxes:
