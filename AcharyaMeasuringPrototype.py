@@ -15,6 +15,7 @@ modelName = "Models/best.pt"
 
 #? Configs
 runTraining = False
+saveImagesAfterPrediction = True
 useReferencePoint = True;
 epochsNumber = 10
 
@@ -30,7 +31,8 @@ def init():
     imageNumber = imageNumber + 1
 
     recognizeObjects(image)
-    utlis.saveImage(image, f'{savingPath}', f"PredictedImage_{imageNumber}.jpg")
+
+    if saveImagesAfterPrediction: utlis.saveImage(image, f'{savingPath}', f"PredictedImage_{imageNumber}.jpg")
 
     cv2.imshow(f'Image {imageNumber}', image)
     
