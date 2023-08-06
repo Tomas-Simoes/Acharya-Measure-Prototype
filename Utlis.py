@@ -46,9 +46,6 @@ def saveImage(image, path, fileName):
       outputPath = os.path.join(outputPath, f'Prediction {int(lastPredictionFolderNumber) + 1}')
       cachedPredictionPath = outputPath
 
-      print(outputPath)
-      print(lastPredictionFolderNumber)
-    
 
     os.makedirs(cachedPredictionPath, exist_ok=True)
     
