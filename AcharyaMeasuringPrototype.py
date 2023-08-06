@@ -2,10 +2,13 @@ import cv2
 import glob 
 import Utlis as utlis
 from ultralytics import YOLO
-
+from PIL import Image
 
 #? Path to use for predictions
 imagePath = "Test Images/"
+
+#? Path to use for saving the predictions
+savingPath = "Predicted Images"
 
 #? Model to use
 modelName = "Models/best.pt"
@@ -27,6 +30,8 @@ def init():
     imageNumber = imageNumber + 1
 
     recognizeObjects(image)
+    utlis.saveImage(image, f'{savingPath}', f"PredictedImage_{imageNumber}.jpg")
+
     cv2.imshow(f'Image {imageNumber}', image)
     
   
@@ -36,21 +41,14 @@ def init():
 def recognizeObjects(img):
   model = YOLO(modelName)
 
-  model.train(data="data.yaml", epochs=epochsNumber)
+  if runTraining: model.train(data="data.yaml", epochs=epochsNumber)
   
   result = model.predict(img)[0]
 
   for box in result.boxes:
-    class_name = result.names[box.cls[0].item()]
-    cords = box.xyxy[0].tolist()
-    cords = [round(x) for x in cords]
-    x1, y1, x2, y2 = cords
-    conf = round(box.conf[0].item(), 2)
-
-    boundingBox_label = class_name + " " + str(conf) + "%"
-    utlis.drawRectangle(img, utlis.getObjectInformation)
+    label, x1, x2, y1, y2 = utlis.getObjectInformation(box, result)
+    utlis.drawRectangle(img, label, x1, x2, y1, y2)
     
-
 
 init()
 
