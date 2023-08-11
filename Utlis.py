@@ -21,7 +21,7 @@ def drawRectangle(img, className, conf, x1, y1, x2, y2, windowDistance):
                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
     if className == "window":
         boundingBox = cv2.putText(
-            boundingBox, f'Window Distance: {str(windowDistance)} cm', (x1, y1 - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+            boundingBox, f'Window Distance: {str(windowDistance)} mm', (x1, y1 - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
 
 
 def getObjectInformation(box, result):
@@ -105,7 +105,7 @@ def saveImage(image, path, fileName):
         print(f'Error occurred while saving the image: {e}')
 
 
-def readPath(path, imageNewWidth, imageNewHeight):
+def readPath(path, resizeImage, imageNewWidth, imageNewHeight):
     _allImagesInPath = []
     _imagesExtensions = [".jpg", ".jpeg", ".png"]
 
@@ -114,15 +114,18 @@ def readPath(path, imageNewWidth, imageNewHeight):
             _thisImagePath = os.path.join(path, _fileName)
 
             _thisImage = cv2.imread(_thisImagePath)
-            _thisImage = cv2.resize(
-                _thisImage, (imageNewWidth, imageNewHeight))
+
+            if resizeImage: 
+                _thisImage = cv2.resize(_thisImage, (imageNewWidth, imageNewHeight))
 
             _allImagesInPath.append(_thisImage)
 
     return _allImagesInPath
 
 
-def readImage(path, imageNewWidth, imageNewHeight):
+def readImage(path, resizeImage, imageNewWidth, imageNewHeight):
     _img = cv2.imread(path)
-    _img = cv2.resize(_img, (imageNewWidth, imageNewHeight))
+
+    if resizeImage: _img = cv2.resize(_img, (imageNewWidth, imageNewHeight))
+
     return _img
