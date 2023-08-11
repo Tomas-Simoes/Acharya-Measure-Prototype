@@ -1,8 +1,6 @@
 import cv2
-import glob
 import Utlis as utlis
 from ultralytics import YOLO
-from PIL import Image
 
 # ? Path to use for predictions
 testImagePath = "Test Images/"
@@ -22,7 +20,7 @@ epochsNumber = 10
 
 # ? Camera Settings
 focalLength = 28
-#focalLength = 55
+# focalLength = 55
 
 sensorHeight = 3.60
 sensorWidth = 4.80
@@ -38,7 +36,8 @@ testImagesData = []
 def init():
     global testImagesData, allImages, imageWidth, imageHeight
 
-    allImages = utlis.readPath(testImagePath, resizeImage, imageWidth, imageHeight)
+    allImages = utlis.readPath(
+        testImagePath, resizeImage, imageWidth, imageHeight)
 
     with open(testImageDataPath, "r") as configFile:
         testImagesData = configFile.readlines()
@@ -46,7 +45,7 @@ def init():
     imageNumber = 0
 
     for image in allImages:
-       
+
         if not resizeImage:
             imageHeight, imageWidth, _ = image.shape
 
@@ -72,10 +71,10 @@ def recognizeObjects(image, imageNumber):
     result = model.predict(image)[0]
 
     for box in result.boxes:
-        className, conf, x1, x2, y1, y2 = utlis.getObjectInformation(
+        className, conf, x1, y1, x2, y2 = utlis.getObjectInformation(
             box, result)
 
-        if(conf <= 0.5): 
+        if (conf <= 0.5):
             print("Recognized one window with less than 50% confidence rate.")
             return
 
@@ -83,9 +82,8 @@ def recognizeObjects(image, imageNumber):
         if (className == "window"):
             windowDistance = recognizeWindowDistance(imageNumber, y1, y2)
 
-        print("ya")
         utlis.drawRectangle(image, className, conf, x1,
-                            x2, y1, y2, windowDistance)
+                            y1, x2, y2, windowDistance)
 
 
 def recognizeWindowDistance(imageNumber, y1, y2):
@@ -93,10 +91,17 @@ def recognizeWindowDistance(imageNumber, y1, y2):
         imageNumber, testImagesData)
 
     windowWidth = windowWidth * 10
-    windowDistance = (focalLength * float(windowHeight) * imageHeight) / ((y1 - y2) * sensorHeight)
-    
+    pixelSize = 0
+    if y1 > y2:
+        pixelSize = y1 - y2
+    else:
+        pixelSize = y2 - y1
+
+    windowDistance = (focalLength * float(windowHeight) *
+                      imageHeight) / (pixelSize * sensorHeight)
+
     print(
-        f'Calculating formula with height: {focalLength} * {float(windowHeight) * 10} * {imageHeight} / ({y1} - {y2}) * {sensorHeight} = {windowDistance}')
+        f'Calculating formula with height: {focalLength} * {float(windowHeight) * 10} * {imageHeight} / {pixelSize} * {sensorHeight} = {windowDistance}')
 
     windowDistance = round(windowDistance)
 
