@@ -17,13 +17,15 @@ modelName = "Models/best.pt"
 # ? Configs
 runTraining = False
 saveImagesAfterPrediction = False
+resizeImage = False
 epochsNumber = 10
 
 # ? Camera Settings
-focalLength = 25
+focalLength = 28
+#focalLength = 55
 
-sensorHeight = 14.9
-sensorWidth = 22.3
+sensorHeight = 3.60
+sensorWidth = 4.80
 
 imageWidth = 960
 imageHeight = 560
@@ -34,10 +36,9 @@ testImagesData = []
 
 
 def init():
-    global testImagesData
-    global allImages
+    global testImagesData, allImages, imageWidth, imageHeight
 
-    allImages = utlis.readPath(testImagePath, imageWidth, imageHeight)
+    allImages = utlis.readPath(testImagePath, resizeImage, imageWidth, imageHeight)
 
     with open(testImageDataPath, "r") as configFile:
         testImagesData = configFile.readlines()
@@ -45,6 +46,10 @@ def init():
     imageNumber = 0
 
     for image in allImages:
+       
+        if not resizeImage:
+            imageHeight, imageWidth, _ = image.shape
+
         imageNumber = imageNumber + 1
 
         recognizeObjects(image, imageNumber)
@@ -70,6 +75,10 @@ def recognizeObjects(image, imageNumber):
         className, conf, x1, x2, y1, y2 = utlis.getObjectInformation(
             box, result)
 
+        if(conf <= 0.5): 
+            print("Recognized one window with less than 50% confidence rate.")
+            return
+
         windowDistance = ""
         if (className == "window"):
             windowDistance = recognizeWindowDistance(imageNumber, y1, y2)
@@ -82,12 +91,13 @@ def recognizeWindowDistance(imageNumber, y1, y2):
     _, windowWidth, windowHeight = utlis.getWindowInformation(
         imageNumber, testImagesData)
 
-    windowDistance = (focalLength * (float(windowHeight) * 10)
-                      * imageHeight) / ((y1 - y2) * sensorHeight)
+    windowWidth = windowWidth * 10
+    windowDistance = (focalLength * float(windowHeight) * imageHeight) / ((y1 - y2) * sensorHeight)
+    
     print(
-        f'Calculating formula with height: {focalLength} * {float(windowHeight) * 10} * {imageHeight} / {y1 - y2} * {sensorHeight} = {windowDistance}')
+        f'Calculating formula with height: {focalLength} * {float(windowHeight) * 10} * {imageHeight} / ({y1} - {y2}) * {sensorHeight} = {windowDistance}')
 
-    windowDistance = round(windowDistance) / 10
+    windowDistance = round(windowDistance)
 
     return windowDistance
 
