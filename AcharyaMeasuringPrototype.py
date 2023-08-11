@@ -83,6 +83,7 @@ def recognizeObjects(image, imageNumber):
         if (className == "window"):
             windowDistance = recognizeWindowDistance(imageNumber, y1, y2)
 
+        print("ya")
         utlis.drawRectangle(image, className, conf, x1,
                             x2, y1, y2, windowDistance)
 
