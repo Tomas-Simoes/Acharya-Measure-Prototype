@@ -1,3 +1,5 @@
 Input Format: imageNumber --- width (cm) --- height (cm)
-1 80 50
-2 100 100
+1 80 90
+2 80 50
+2 80 90
+3 80 90
