@@ -1,7 +1,5 @@
 import cv2
 import os
-import numpy as np
-from PIL import Image
 # from AcharyaMeasuringPrototype import imageHeight
 # from AcharyaMeasuringPrototype import imageWidth
 
@@ -11,6 +9,7 @@ cachedPredictionPath = ""
 def drawRectangle(img, className, conf, x1, y1, x2, y2, windowDistance):
     label = className + " " + str(conf) + "%"
 
+    print(x1, y1)
     boundingBox = cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
     (text_w, text_h), _ = cv2.getTextSize(
@@ -115,8 +114,9 @@ def readPath(path, resizeImage, imageNewWidth, imageNewHeight):
 
             _thisImage = cv2.imread(_thisImagePath)
 
-            if resizeImage: 
-                _thisImage = cv2.resize(_thisImage, (imageNewWidth, imageNewHeight))
+            if resizeImage:
+                _thisImage = cv2.resize(
+                    _thisImage, (imageNewWidth, imageNewHeight))
 
             _allImagesInPath.append(_thisImage)
 
@@ -126,6 +126,7 @@ def readPath(path, resizeImage, imageNewWidth, imageNewHeight):
 def readImage(path, resizeImage, imageNewWidth, imageNewHeight):
     _img = cv2.imread(path)
 
-    if resizeImage: _img = cv2.resize(_img, (imageNewWidth, imageNewHeight))
+    if resizeImage:
+        _img = cv2.resize(_img, (imageNewWidth, imageNewHeight))
 
     return _img
