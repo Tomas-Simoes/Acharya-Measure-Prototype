@@ -76,7 +76,7 @@ def recognizeObjects(image, imageNumber):
 
         if (conf <= 0.5):
             print("Recognized one window with less than 50% confidence rate.")
-            return
+            continue
 
         windowDistance = ""
         if (className == "window"):
