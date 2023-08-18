@@ -11,12 +11,15 @@ savingPath = "Predicted Images"
 
 # ? Model to use
 modelName = "Models/best.pt"
+modelName = "runs/detect/train5/weights/best.pt"
+model = None
 
 # ? Configs
-runTraining = False
+runTraining = True
+runPrediction = True
 saveImagesAfterPrediction = False
 resizeImage = False
-epochsNumber = 10
+epochsNumber = 50
 
 # ? Camera Settings
 focalLength = 28
@@ -34,7 +37,9 @@ testImagesData = []
 
 
 def init():
-    global testImagesData, allImages, imageWidth, imageHeight
+    global testImagesData, allImages, imageWidth, imageHeight, model
+
+    model = YOLO(modelName)
 
     allImages = utlis.readPath(
         testImagePath, resizeImage, imageWidth, imageHeight)
@@ -44,6 +49,9 @@ def init():
 
     imageNumber = 0
 
+    if runTraining:
+        trainModel(model)
+
     for image in allImages:
 
         if not resizeImage:
@@ -51,7 +59,8 @@ def init():
 
         imageNumber = imageNumber + 1
 
-        recognizeObjects(image, imageNumber)
+        if runPrediction:
+            recognizeObjects(image, imageNumber)
 
         if saveImagesAfterPrediction:
             utlis.saveImage(image, f'{savingPath}',
@@ -64,10 +73,6 @@ def init():
 
 def recognizeObjects(image, imageNumber):
     model = YOLO(modelName)
-
-    if runTraining:
-        model.train(data="data.yaml", epochs=epochsNumber)
-
     result = model.predict(image)[0]
 
     for box in result.boxes:
@@ -106,6 +111,11 @@ def recognizeWindowDistance(imageNumber, y1, y2):
     windowDistance = round(windowDistance)
 
     return windowDistance
+
+
+def trainModel(model):
+    print("Started the training phase.")
+    model.train(data="data.yaml", epochs=epochsNumber)
 
 
 init()
