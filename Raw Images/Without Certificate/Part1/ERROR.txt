@@ -1,0 +1,2 @@
+ZIP truncated. Processed 983 out of 1000 files.
+ZIP containing all files must be less than the raw file size limit for your cloud (acharya) which is 100 MB.
