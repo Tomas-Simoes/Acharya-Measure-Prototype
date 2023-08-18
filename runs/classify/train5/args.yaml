@@ -1,11 +1,11 @@
-task: detect
+task: classify
 mode: train
-model: yolov8l.pt
+model: Models/yolov8l-cls.pt
 data: data.yaml
 epochs: 300
 patience: 50
 batch: 16
-imgsz: 640
+imgsz: 224
 save: true
 save_period: -1
 cache: false
@@ -93,4 +93,4 @@ mixup: 0.0
 copy_paste: 0.0
 cfg: null
 tracker: botsort.yaml
-save_dir: runs\detect\train
+save_dir: runs\classify\train5

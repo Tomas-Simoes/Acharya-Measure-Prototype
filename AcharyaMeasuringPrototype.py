@@ -1,3 +1,4 @@
+import os
 import cv2
 import Utlis as utlis
 from ultralytics import YOLO
@@ -10,8 +11,7 @@ testImageDataPath = "Test Images/measurements.txt"
 savingPath = "Predicted Images"
 
 # ? Model to use
-modelName = "Models/best.pt"
-modelName = "runs/detect/train5/weights/best.pt"
+modelName = "Models/yolov8l.pt"
 model = None
 
 # ? Configs
@@ -121,6 +121,7 @@ def recognizeWindowDistance(imageNumber, y1, y2):
 
 def trainModel(model):
     print("Started the training phase.")
+    print(os.getcwd())
     model.train(data="data.yaml", epochs=epochsNumber)
 
 
