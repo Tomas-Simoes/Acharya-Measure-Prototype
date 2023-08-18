@@ -53,6 +53,7 @@ saveImagesAfterPrediction = False # If it's going to save the images after the p
 
 modelName = "Models/best.pt"# Model to use
 runTraining = False # If it's going to train the model
+runPrediction = False # If it's going to predict on the test images
 epochsNumber = 10 # Number of training cycles
 
 resizeImage = False # If it's going to resize the image or use the original size
