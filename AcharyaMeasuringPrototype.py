@@ -17,9 +17,9 @@ model = None
 # ? Configs
 runTraining = True
 runPrediction = True
-saveImagesAfterPrediction = False
+saveImagesAfterPrediction = True
 resizeImage = False
-epochsNumber = 50
+epochsNumber = 300
 
 # ? Camera Settings
 focalLength = 28
@@ -37,6 +37,12 @@ testImagesData = []
 
 
 def init():
+    # utlis.changeImageID("datasets/train/labels", "0", "1", "part 2")
+    # utlis.changeImageID("datasets/val/labels", "0", "1", "part 2")
+    startPrototype()
+
+
+def startPrototype():
     global testImagesData, allImages, imageWidth, imageHeight, model
 
     model = YOLO(modelName)

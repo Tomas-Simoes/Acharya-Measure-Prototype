@@ -129,4 +129,36 @@ def readImage(path, resizeImage, imageNewWidth, imageNewHeight):
     if resizeImage:
         _img = cv2.resize(_img, (imageNewWidth, imageNewHeight))
 
-    return _img
+
+def changeImageID(path, currentId, futureID, initialString):
+    _imagesExtensions = [".txt"]
+
+    for _fileName in os.listdir(path):
+        if any(_fileName.endswith(extension) or _fileName.endswith(extension.upper()) for extension in _imagesExtensions):
+            _thisTextPath = os.path.join(path, _fileName)
+
+            print(initialString)
+            print(_fileName)
+            print(_fileName.startswith(initialString))
+
+            if _fileName.startswith(initialString):
+                with open(_thisTextPath, 'r') as file:
+                    first_character = file.read(1)
+                    print(currentId)
+                    print(first_character)
+                    print(first_character == currentId)
+                    if str(first_character) == currentId:
+                        print("ya")
+                        rest_of_content = file.read()
+                        rest_of_content[1:]
+                        print(rest_of_content)
+
+                        new_content = futureID + rest_of_content
+                        print(new_content)
+                        new_file_path = os.path.join(
+                            path, _fileName)  # New file path
+                        with open(new_file_path, 'w') as new_file:
+                            new_file.write(new_content)
+
+                        # Optionally, you can delete the old file if needed
+                        # os.remove(_thisTextPath)
