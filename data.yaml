@@ -1,5 +1,5 @@
 train: ../train/images
 val: ../val/images
 
-nc: 2
-names: ['papers', 'window']
+nc: 3
+names: ['papers', 'btl', 'upl']
