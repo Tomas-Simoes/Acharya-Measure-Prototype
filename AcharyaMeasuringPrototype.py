@@ -11,7 +11,7 @@ testImageDataPath = "Test Images/measurements.txt"
 savingPath = "Predicted Images"
 
 # ? Model to use
-modelName = "Models/yolov8l.pt"
+modelName = "yolov8l.pt"
 model = None
 
 # ? Configs
