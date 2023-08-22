@@ -11,11 +11,11 @@ testImageDataPath = "Test Images/measurements.txt"
 savingPath = "Predicted Images"
 
 # ? Model to use
-modelName = "Models/yolov8l.pt"
+modelName = "runs/detect/train/weights/best.pt"
 model = None
 
 # ? Configs
-runTraining = True
+runTraining = False
 runPrediction = True
 saveImagesAfterPrediction = True
 resizeImage = False
