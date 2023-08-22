@@ -17,7 +17,7 @@ model = None
 # ? Configs
 runTraining = False
 runPrediction = True
-saveImagesAfterPrediction = True
+saveImagesAfterPrediction = False
 resizeImage = False
 epochsNumber = 300
 
