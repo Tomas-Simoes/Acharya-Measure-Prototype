@@ -1,7 +1,10 @@
 import os
 import cv2
+import math
+import numpy as np
 import Utlis as utlis
 from ultralytics import YOLO
+import ImageProcessing as imageProcessing
 
 # ? Path to use for predictions
 testImagePath = "Test Images/"
@@ -16,10 +19,11 @@ model = None
 
 # ? Configs
 runTraining = False
-runPrediction = True
+runPrediction = False
+findVanishingPoints = True
 saveImagesAfterPrediction = False
 resizeImage = False
-epochsNumber = 300
+epochsNumber = 30
 
 # ? Camera Settings
 focalLength = 28
@@ -59,11 +63,13 @@ def startPrototype():
         trainModel(model)
 
     for image in allImages:
+        imageNumber = imageNumber + 1
 
         if not resizeImage:
             imageHeight, imageWidth, _ = image.shape
 
-        imageNumber = imageNumber + 1
+        if (findVanishingPoints):
+            recognizeVanishingPoints(image)
 
         if runPrediction:
             recognizeObjects(image, imageNumber)
@@ -117,6 +123,20 @@ def recognizeWindowDistance(imageNumber, y1, y2):
     windowDistance = round(windowDistance)
 
     return windowDistance
+
+
+def recognizeVanishingPoints(image):
+    preProcessedImage = imageProcessing.edgeImageConverter(imageProcessing.blurImageConverter(
+        imageProcessing.grayImageConverter(image)))
+
+    imageLines = cv2.HoughLinesP(preProcessedImage, 1, np.pi / 180, 50, 10, 15)
+
+    if imageLines is None:
+        print("There are no lines in the image.")
+        return
+
+    cv2.imshow(preProcessedImage)
+    cv2.imshow(imageLines)
 
 
 def trainModel(model):
