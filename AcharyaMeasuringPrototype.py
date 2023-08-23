@@ -11,7 +11,7 @@ testImageDataPath = "Test Images/measurements.txt"
 savingPath = "Predicted Images"
 
 # ? Model to use
-modelName = "runs/detect/train/weights/best.pt"
+modelName = "Models/best.pt"
 model = None
 
 # ? Configs
