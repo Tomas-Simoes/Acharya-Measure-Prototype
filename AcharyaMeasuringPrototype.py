@@ -18,9 +18,9 @@ modelName = "Models/best.pt"
 model = None
 
 # ? Configs
-runTraining = False
+runTraining = True
 runPrediction = False
-findVanishingPoints = True
+findVanishingPoints = False
 saveImagesAfterPrediction = False
 resizeImage = False
 epochsNumber = 30
@@ -69,7 +69,7 @@ def startPrototype():
             imageHeight, imageWidth, _ = image.shape
 
         if (findVanishingPoints):
-            recognizeVanishingPoints(image)
+            recognizeVanishingPoints(image, imageNumber)
 
         if runPrediction:
             recognizeObjects(image, imageNumber)
@@ -125,7 +125,7 @@ def recognizeWindowDistance(imageNumber, y1, y2):
     return windowDistance
 
 
-def recognizeVanishingPoints(image):
+def recognizeVanishingPoints(image, imageNumber):
     preProcessedImage = imageProcessing.edgeImageConverter(imageProcessing.blurImageConverter(
         imageProcessing.grayImageConverter(image)))
 
@@ -135,8 +135,16 @@ def recognizeVanishingPoints(image):
         print("There are no lines in the image.")
         return
 
-    cv2.imshow(preProcessedImage)
-    cv2.imshow(imageLines)
+    i = 0
+    for imageLine in imageLines:
+        thisLine = imageLine[0]
+
+        cv2.line(image, (thisLine[0], thisLine[1]),
+                 (thisLine[2], thisLine[3]), (0, 255, 0), 3, 10)
+
+        i += 1
+
+    # cv2.imshow(f'Pre-processed Image {imageNumber}', preProcessedImage)
 
 
 def trainModel(model):

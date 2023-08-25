@@ -2,7 +2,7 @@ import cv2
 
 
 def grayImageConverter(image):
-    return cv2.cvtcolor(image, cv2.COLOR_BGR2GRAY)
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 
 def blurImageConverter(image):
