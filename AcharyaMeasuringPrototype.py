@@ -15,12 +15,13 @@ savingPath = "Predicted Images"
 
 # ? Model to use
 modelName = "Models/best.pt"
+modelName = "Models/bestWallWindow.pt"
 model = None
 
 # ? Configs
-runTraining = True
-runPrediction = False
-findVanishingPoints = False
+runTraining = False
+runPrediction = True
+findVanishingPoints = True
 saveImagesAfterPrediction = False
 resizeImage = False
 epochsNumber = 30
@@ -92,7 +93,8 @@ def recognizeObjects(image, imageNumber):
             box, result)
 
         if (conf <= 0.5):
-            print("Recognized one window with less than 50% confidence rate.")
+            print(
+                f'Recognized one {className} with less than 50% confidence rate.')
             continue
 
         windowDistance = ""
