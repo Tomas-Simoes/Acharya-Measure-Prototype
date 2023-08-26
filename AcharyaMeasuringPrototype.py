@@ -22,7 +22,7 @@ model = None
 runTraining = False
 runPrediction = True
 findVanishingPoints = True
-saveImagesAfterPrediction = False
+saveImagesAfterPrediction = True
 resizeImage = False
 epochsNumber = 30
 
