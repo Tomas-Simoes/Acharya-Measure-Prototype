@@ -14,9 +14,9 @@ testImageDataPath = "Test Images/measurements.txt"
 savingPath = "Predicted Images"
 
 # ? Model to use
-#modelName = "Models/best.pt"
+# modelName = "Models/best.pt"
 modelName = "Models/bestWallWindow.pt"
-#model = None
+model = None
 
 # ? Configs
 runTraining = True
