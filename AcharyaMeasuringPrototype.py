@@ -21,8 +21,8 @@ model = None
 # ? Configs
 runTraining = True
 runPrediction = False
-findVanishingPoints = True
-saveImagesAfterPrediction = True
+findVanishingPoints = False
+saveImagesAfterPrediction = False
 resizeImage = False
 epochsNumber = 31
 
@@ -42,8 +42,6 @@ testImagesData = []
 
 
 def init():
-    # utlis.changeImageID("datasets/train/labels", "0", "1", "part 2")
-    # utlis.changeImageID("datasets/val/labels", "0", "1", "part 2")
     startPrototype()
 
 
