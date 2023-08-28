@@ -15,7 +15,8 @@ savingPath = "Predicted Images"
 
 # ? Model to use
 # modelName = "Models/best.pt"
-modelName = "Models/bestWallWindow.pt"
+# modelName = "Models/bestWallWindow.pt"
+modelName = "yolov8m.pt"
 model = None
 
 # ? Configs
@@ -24,7 +25,7 @@ runPrediction = False
 findVanishingPoints = False
 saveImagesAfterPrediction = False
 resizeImage = False
-epochsNumber = 31
+epochsNumber = 30
 
 # ? Camera Settings
 focalLength = 28
