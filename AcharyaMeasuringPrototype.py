@@ -14,17 +14,17 @@ testImageDataPath = "Test Images/measurements.txt"
 savingPath = "Predicted Images"
 
 # ? Model to use
-modelName = "Models/best.pt"
+#modelName = "Models/best.pt"
 modelName = "Models/bestWallWindow.pt"
-model = None
+#model = None
 
 # ? Configs
-runTraining = False
-runPrediction = True
+runTraining = True
+runPrediction = False
 findVanishingPoints = True
 saveImagesAfterPrediction = True
 resizeImage = False
-epochsNumber = 30
+epochsNumber = 31
 
 # ? Camera Settings
 focalLength = 28
