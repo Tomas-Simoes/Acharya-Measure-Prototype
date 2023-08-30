@@ -6,7 +6,7 @@ import os
 cachedPredictionPath = ""
 
 
-def drawRectangle(img, className, conf, x1, y1, x2, y2, windowDistance):
+def drawClassRectangle(img, className, conf, x1, y1, x2, y2, windowDistance):
     label = className + " " + str(conf) + "%"
 
     print(x1, y1)
@@ -18,6 +18,7 @@ def drawRectangle(img, className, conf, x1, y1, x2, y2, windowDistance):
         boundingBox, (x1, y1 - 20), (x1 + text_w, y1), (255, 0, 0), -1)
     boundingBox = cv2.putText(boundingBox, label, (x1, y1 - 5),
                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+
     if className == "window":
         boundingBox = cv2.putText(
             boundingBox, f'Window Distance: {str(windowDistance)} mm', (x1, y1 - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
@@ -34,8 +35,8 @@ def getObjectInformation(box, result):
 
 
 def getWindowInformation(imageNumber, data):
-    print(
-        f'Reading distance between camera and window for image number {imageNumber}')
+    # print(
+    #    f'Reading distance between camera and window for image number {imageNumber}')
 
     thisWindowData = ""
 
@@ -43,12 +44,12 @@ def getWindowInformation(imageNumber, data):
         if imageData[0] == str(imageNumber):
             thisWindowData = imageData.rstrip('\n')
 
-    if thisWindowData != "":
-        print(f'Found windows data for this image "{thisWindowData}".')
-    else:
-        print(
-            "Didn't found windows data for this image. Skiping window distance recognition.")
-        return 0, 0, 0
+    # if thisWindowData != "":
+    #    print(f'Found windows data for this image "{thisWindowData}".')
+    # else:
+    #    print(
+    #        "Didn't found windows data for this image. Skiping window distance recognition.")
+    #    return 0, 0, 0
 
     newInformation = ""
     allExtractedInformation = []
