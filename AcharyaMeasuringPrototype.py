@@ -27,7 +27,7 @@ saveImagesAfterPrediction = False
 resizeImage = False
 chooseWallBounderies = True
 
-epochsNumber = 30
+epochsNumber = 5
 minimumWindowConfRate = 0.6
 
 # ? Camera Settings
