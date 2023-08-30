@@ -1,0 +1,27 @@
+service: acharya-prototype
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+  region: eu-west-1
+
+functions
+  main:
+    handler: AcharyaMeasuringPrototype.init
+    package:
+      include:
+        - AcharyaMeasuringPrototype.py
+        - Utlis.py
+        - Models/
+        - Test Images/
+    events:
+      - http:
+          path: /init
+          method: POST
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
