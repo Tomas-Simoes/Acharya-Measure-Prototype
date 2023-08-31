@@ -1,6 +1,9 @@
 import os
 import cv2
 import numpy as np
+import base64
+import json
+from flask import Flask, request, jsonify
 from ultralytics import YOLO
 
 import Utlis as utlis
@@ -41,6 +44,7 @@ imageWidth = 960
 imageHeight = 560
 
 # ? Global Variables
+app = Flask(__name__)
 allImages = []
 testImagesData = []
 cachedMousePositionX = -1
@@ -48,8 +52,36 @@ cachedMousePositionY = -1
 recognitionResults = None
 
 
-def init():
-    startPrototype()
+@app.route("/init", methods=["POST"])
+def init(event, context):
+    try:
+        print("The API was called.")
+
+        request = request.get_json()
+
+        image_base64 = request.get('image')
+        imageToPredict = utlis.convertBase64ToCV2(image_base64)
+
+        startPrototype()
+
+        response = {
+            'message': 'Image processed successfully.',
+            'result': imageToPredict
+        }
+
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route("/health")
+def health(event, context):
+    print("The server is healthy.")
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps({'message': 'The server is healthy.'})
+    }
 
 
 def startPrototype():
@@ -239,8 +271,6 @@ def trainModel(model):
     print(os.getcwd())
     model.train(data="data.yaml", epochs=epochsNumber)
 
-
-init()
 
 # recognizedObjects = recognizeObjects(image)
 # recognizedObjects.show()

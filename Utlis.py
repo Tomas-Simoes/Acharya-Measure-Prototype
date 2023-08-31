@@ -1,5 +1,8 @@
 import cv2
 import os
+import base64
+import numpy as np
+
 # from AcharyaMeasuringPrototype import imageHeight
 # from AcharyaMeasuringPrototype import imageWidth
 
@@ -163,3 +166,11 @@ def changeImageID(path, currentId, futureID, initialString):
 
                         # Optionally, you can delete the old file if needed
                         # os.remove(_thisTextPath)
+
+
+def convertBase64ToCV2(image_base64):
+    image_bytes = base64.b64decode(image_base64.split(',')[1])
+    image_np = np.frombuffer(image_bytes, np.uint8)
+    image_cv2 = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+
+    return image_cv2

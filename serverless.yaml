@@ -5,8 +5,9 @@ provider:
   stage: dev
   region: eu-west-1
 
-functions
-  main:
+functions:
+  init:
+    timeout: 30
     handler: AcharyaMeasuringPrototype.init
     package:
       include:
@@ -15,12 +16,24 @@ functions
         - Models/
         - Test Images/
     events:
-      - http:
-          path: /init
+      - http: 
+          path: /init 
           method: POST
+
+  health:
+    timeout: 30
+    handler: AcharyaMeasuringPrototype.health
+    package:
+      include:
+        - AcharyaMeasuringPrototype.py
+    events:
+      - http: 
+          path: /health
+          method: GET
 
 plugins:
   - serverless-python-requirements
+  - serverless-offline
 
 custom:
   pythonRequirements:

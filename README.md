@@ -10,14 +10,37 @@ To get the project running locally you'll have to run:
 python3 AcharyaMeasuringPrototype.py
 ```
 
+If you want to run the project using Serverless Framework you'll have to run:
+
+```sh
+npm i serverless-offline
+serverless offline
+```
 ## Prerequisites
 
 * Ultralytics Library
 
 ```sh
-  pip install ultralytics
+pip install ultralytics
+```
+* Flask
+
+```sh
+pip install Flask
 ```
 
+* Serverless Framework
+
+```sh
+npm install -g serverless
+```
+
+* Serverless Plugins
+
+```sh
+serverless plugin install -n serverless-python-requirements
+serverless plugin install -n serverless-offline
+```
 ## How to use
 
 You can use this project to recognize objects in images and discover the distances between the camera and those objects.
