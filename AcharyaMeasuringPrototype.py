@@ -23,6 +23,7 @@ modelName = "Models/best.pt"
 model = None
 
 # ? Configs
+serverless = True
 runTraining = False
 runPrediction = True
 findVanishingPoints = False
@@ -62,7 +63,10 @@ def init(event, context):
         image_base64 = request.get('image')
         imageToPredict = utlis.convertBase64ToCV2(image_base64)
 
-        startPrototype()
+        if(serverless):
+         
+        else:
+            startPrototype(imageToPredict)
 
         response = {
             'message': 'Image processed successfully.',
@@ -125,6 +129,11 @@ def startPrototype():
                 imageName, chooseWallBounderies, (image, imageName, recognitionResults))
 
     cv2.waitKey(0)
+
+def startServerlessPrototype(image):
+    global testImagesData, allImages, imageWidth, imageHeight, model, recognitionResults
+
+    model = YOLO(modelName)
 
 
 def recognizeObjects(image, imageNumber):

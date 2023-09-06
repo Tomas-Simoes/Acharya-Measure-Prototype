@@ -74,7 +74,7 @@ testImageDataPath = "Test Images/measurements.txt" # Path where is the images da
 savingPath = "Predicted Images" # Path to use for saving the predictions
 saveImagesAfterPrediction = False # If it's going to save the images after the prediction
 
-modelName = "Models/best.pt"# Model to use
+modelName = "Models/best.pt" # Model to use
 runTraining = False # If it's going to train the model
 runPrediction = False # If it's going to predict on the test images
 epochsNumber = 10 # Number of training cycles
