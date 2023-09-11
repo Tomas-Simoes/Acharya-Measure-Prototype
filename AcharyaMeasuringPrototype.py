@@ -1,9 +1,10 @@
 import os
 import cv2
+import cloudinary.api
+import requests
 import numpy as np
-import base64
 import json
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from ultralytics import YOLO
 
 import Utlis as utlis
@@ -18,12 +19,9 @@ savingPath = "Predicted Images"
 
 # ? Model to use
 modelName = "Models/best.pt"
-# modelName = "Models/bestWallWindow.pt"
-# modelName = "yolov8m.pt"
 model = None
 
 # ? Configs
-serverless = True
 runTraining = False
 runPrediction = True
 findVanishingPoints = False
@@ -36,7 +34,6 @@ minimumWindowConfRate = 0.6
 
 # ? Camera Settings
 focalLength = 28
-# focalLength = 55
 
 sensorHeight = 3.60
 sensorWidth = 4.80
@@ -44,41 +41,73 @@ sensorWidth = 4.80
 imageWidth = 960
 imageHeight = 560
 
+# ? Cloudinary Config Variables
+cloudinaryFolder = "acharya-prototype-test"
+cloudinaryFileName = "4_ykz60d"
+
 # ? Global Variables
-app = Flask(__name__)
+
 allImages = []
 testImagesData = []
 cachedMousePositionX = -1
 cachedMousePositionY = -1
 recognitionResults = None
 
+app = Flask(__name__)
 
-@app.route("/init", methods=["POST"])
+cloudinary.config(
+    cloud_name="acharya",
+    api_key="832265632616173",
+    api_secret="pXd5M0xmCS0eXtTqtx058x4W1Oc"
+)
+
+
 def init(event, context):
-    try:
-        print("The API was called.")
+    with app.app_context():
+        try:
 
-        request = request.get_json()
+            imageToPredict = fetchDatabase()
 
-        image_base64 = request.get('image')
-        imageToPredict = utlis.convertBase64ToCV2(image_base64)
+            if imageToPredict is None:
+                response = {
+                    'message': 'Image processed successfully.',
+                    'result': None
+                }
 
-        if(serverless):
-         
-        else:
-            startPrototype(imageToPredict)
+                return {
+                    "statusCode": 200,
+                    "headers": {
+                        'Content-Type': "application/json"
+                    },
+                    "body": json.dumps(response)
+                }
 
-        response = {
-            'message': 'Image processed successfully.',
-            'result': imageToPredict
-        }
+            imageAfterPrediction = startServerlessPrototype(imageToPredict)
+            imageAfterPrediction_base64 = utlis.convertCV2ToBase64(
+                imageAfterPrediction)
 
-        return jsonify(response), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+            response = {
+                'message': 'Image processed successfully.',
+                'result': imageAfterPrediction_base64
+            }
+
+            return {
+                "statusCode": 200,
+                "headers": {
+                    'Content-Type': "application/json"
+                },
+                "body": json.dumps(response)
+            }
+        except Exception as e:
+            return {
+                'statusCode': 500,
+                'headers': {
+                    'Content-Type': 'application/json',
+                },
+                'body': json.dumps(e)
+            }
 
 
-@app.route("/health")
 def health(event, context):
     print("The server is healthy.")
 
@@ -86,6 +115,26 @@ def health(event, context):
         'statusCode': 200,
         'body': json.dumps({'message': 'The server is healthy.'})
     }
+
+
+def trainModel(model):
+    print("Started the training phase.")
+    print(os.getcwd())
+    model.train(data="data.yaml", epochs=epochsNumber)
+
+
+def startServerlessPrototype(image):
+    global model, imageName, imageHeight, imageWidth, recognitionResults
+    model = YOLO(modelName)
+    imageName = 'Image 1'
+
+    if not resizeImage:
+        imageHeight, imageWidth, _ = image.shape
+
+    recognitionResults = recognizeObjects(
+        image, 1)
+
+    return image
 
 
 def startPrototype():
@@ -129,6 +178,7 @@ def startPrototype():
                 imageName, chooseWallBounderies, (image, imageName, recognitionResults))
 
     cv2.waitKey(0)
+
 
 def startServerlessPrototype(image):
     global testImagesData, allImages, imageWidth, imageHeight, model, recognitionResults
@@ -275,11 +325,40 @@ def recognizeWallHeight(image, imageName, windowHeightPixels, windowHeightCM, po
     cv2.imshow(imageName, image)
 
 
+def fetchDatabase():
+    publicID = f"{cloudinaryFolder}/{cloudinaryFileName}"
+
+    imageInfo = cloudinary.api.resource(publicID)
+    imageURL = imageInfo.get("url")
+
+    response = requests.get(imageURL)
+
+    if response.status_code == 200:
+        image_bytes = np.frombuffer(response.content, np.uint8)
+        imageCV2 = cv2.imdecode(image_bytes, cv2.IMREAD_COLOR)
+
+        if imageCV2 is not None:
+            cv2.imshow("Image from Cloudinary", imageCV2)
+            return imageCV2
+        else:
+            print("Failed to decode the image.")
+            return None
+    else:
+        print("Failed to fetch the image.")
+        return None
+
+    # TODO fetch cloudinary database and fetch the image to predict
+    # TODO return then that image
+
+
 def trainModel(model):
     print("Started the training phase.")
     print(os.getcwd())
     model.train(data="data.yaml", epochs=epochsNumber)
 
+
+if not serverless:
+    startPrototype()
 
 # recognizedObjects = recognizeObjects(image)
 # recognizedObjects.show()

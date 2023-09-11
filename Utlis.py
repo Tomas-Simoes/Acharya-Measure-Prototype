@@ -47,12 +47,12 @@ def getWindowInformation(imageNumber, data):
         if imageData[0] == str(imageNumber):
             thisWindowData = imageData.rstrip('\n')
 
-    # if thisWindowData != "":
-    #    print(f'Found windows data for this image "{thisWindowData}".')
-    # else:
-    #    print(
-    #        "Didn't found windows data for this image. Skiping window distance recognition.")
-    #    return 0, 0, 0
+    if thisWindowData != "":
+        print(f'Found windows data for this image "{thisWindowData}".')
+    else:
+        print(
+            "Didn't found windows data for this image. Skiping window distance recognition.")
+        return 0, 0, 0
 
     newInformation = ""
     allExtractedInformation = []
@@ -67,6 +67,7 @@ def getWindowInformation(imageNumber, data):
             newInformation = ""
 
     allExtractedInformation.append(newInformation)
+    print(allExtractedInformation)
     return allExtractedInformation
 
 
@@ -174,3 +175,11 @@ def convertBase64ToCV2(image_base64):
     image_cv2 = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
 
     return image_cv2
+
+
+def convertCV2ToBase64(image):
+    _, image_np = cv2.imencode('.jpg', image)
+    image_bytes = image_np.tobytes()
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+
+    return image_base64
