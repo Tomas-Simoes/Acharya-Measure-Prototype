@@ -4,7 +4,7 @@ import cloudinary.api
 import requests
 import numpy as np
 import json
-from flask import Flask, jsonify
+from flask import Flask
 from ultralytics import YOLO
 
 import Utlis as utlis
@@ -22,6 +22,7 @@ modelName = "Models/best.pt"
 model = None
 
 # ? Configs
+serverless = True
 runTraining = False
 runPrediction = True
 findVanishingPoints = False
@@ -65,12 +66,11 @@ cloudinary.config(
 def init(event, context):
     with app.app_context():
         try:
-
             imageToPredict = fetchDatabase()
 
             if imageToPredict is None:
                 response = {
-                    'message': 'Image processed successfully.',
+                    'message': 'Image was not successfully processed.',
                     'result': None
                 }
 
@@ -83,6 +83,12 @@ def init(event, context):
                 }
 
             imageAfterPrediction = startServerlessPrototype(imageToPredict)
+
+            if imageToPredict is not None and imageAfterPrediction.shape[0] > 0 and imageAfterPrediction.shape[1] > 0 and imageAfterPrediction.shape[2] > 0:
+                print("This image is valid for base64 conversion.")
+            else:
+                print("This image is not valid for base64 conversion.")
+
             imageAfterPrediction_base64 = utlis.convertCV2ToBase64(
                 imageAfterPrediction)
 
@@ -117,14 +123,35 @@ def health(event, context):
     }
 
 
-def trainModel(model):
-    print("Started the training phase.")
-    print(os.getcwd())
-    model.train(data="data.yaml", epochs=epochsNumber)
+def fetchDatabase():
+    publicID = f"{cloudinaryFolder}/{cloudinaryFileName}"
+
+    imageInfo = cloudinary.api.resource(publicID)
+    imageURL = imageInfo.get("url")
+
+    response = requests.get(imageURL)
+
+    if response.status_code == 200:
+        image_bytes = np.frombuffer(response.content, np.uint8)
+        imageCV2 = cv2.imdecode(image_bytes, cv2.IMREAD_COLOR)
+
+        if imageCV2 is not None:
+            print("Fetched and decoded the image successfully.")
+            return imageCV2
+        else:
+            print("Failed to decode the image.")
+            return None
+    else:
+        print("Failed to fetch the image.")
+        return None
+
+    # TODO fetch cloudinary database and fetch the image to predict
+    # TODO return then that image
 
 
 def startServerlessPrototype(image):
     global model, imageName, imageHeight, imageWidth, recognitionResults
+
     model = YOLO(modelName)
     imageName = 'Image 1'
 
@@ -180,10 +207,9 @@ def startPrototype():
     cv2.waitKey(0)
 
 
-def startServerlessPrototype(image):
-    global testImagesData, allImages, imageWidth, imageHeight, model, recognitionResults
-
-    model = YOLO(modelName)
+def trainModel(model):
+    print("Started the training phase.")
+    model.train(data="data.yaml", epochs=epochsNumber)
 
 
 def recognizeObjects(image, imageNumber):
@@ -254,6 +280,28 @@ def recognizeVanishingPoints(image, imageNumber):
     # cv2.imshow(f'Pre-processed Image {imageNumber}', preProcessedImage)
 
 
+def recognizeWallHeight(image, imageName, windowHeightPixels, windowHeightCM, point1, point2):
+    x1, y1 = point1
+    x2, y2 = point2
+
+    if y1 > y2:
+        wallHeightPixels = y1 - y2
+    else:
+        wallHeightPixels = y2 - y1
+
+    print(f'Window height in CM: {windowHeightCM}')
+    print(f'Window height in Pixels: {windowHeightPixels}')
+    print(f'Wall height in Pixels: {wallHeightPixels}')
+
+    wallHeightCM = round((int(windowHeightCM) * wallHeightPixels) /
+                         int(windowHeightPixels))
+
+    # ? Draw information rectangle
+    print(f'Wall height in CM: {wallHeightCM}')
+
+    cv2.imshow(imageName, image)
+
+
 def chooseWallBounderies(event, x, y, flags, param):
     global cachedMousePositionX, cachedMousePositionY
 
@@ -303,62 +351,11 @@ def chooseWallBounderies(event, x, y, flags, param):
                 "There is no available windows in the image. Skipping wall height recognition.")
 
 
-def recognizeWallHeight(image, imageName, windowHeightPixels, windowHeightCM, point1, point2):
-    x1, y1 = point1
-    x2, y2 = point2
-
-    if y1 > y2:
-        wallHeightPixels = y1 - y2
-    else:
-        wallHeightPixels = y2 - y1
-
-    print(f'Window height in CM: {windowHeightCM}')
-    print(f'Window height in Pixels: {windowHeightPixels}')
-    print(f'Wall height in Pixels: {wallHeightPixels}')
-
-    wallHeightCM = round((int(windowHeightCM) * wallHeightPixels) /
-                         int(windowHeightPixels))
-
-    # ? Draw information rectangle
-    print(f'Wall height in CM: {wallHeightCM}')
-
-    cv2.imshow(imageName, image)
-
-
-def fetchDatabase():
-    publicID = f"{cloudinaryFolder}/{cloudinaryFileName}"
-
-    imageInfo = cloudinary.api.resource(publicID)
-    imageURL = imageInfo.get("url")
-
-    response = requests.get(imageURL)
-
-    if response.status_code == 200:
-        image_bytes = np.frombuffer(response.content, np.uint8)
-        imageCV2 = cv2.imdecode(image_bytes, cv2.IMREAD_COLOR)
-
-        if imageCV2 is not None:
-            cv2.imshow("Image from Cloudinary", imageCV2)
-            return imageCV2
-        else:
-            print("Failed to decode the image.")
-            return None
-    else:
-        print("Failed to fetch the image.")
-        return None
-
-    # TODO fetch cloudinary database and fetch the image to predict
-    # TODO return then that image
-
-
-def trainModel(model):
-    print("Started the training phase.")
-    print(os.getcwd())
-    model.train(data="data.yaml", epochs=epochsNumber)
-
-
 if not serverless:
+    print("Running prototype in non-serverless mode.")
     startPrototype()
+else:
+    print("Running prototype in serverless mode.")
 
 # recognizedObjects = recognizeObjects(image)
 # recognizedObjects.show()

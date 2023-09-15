@@ -29,6 +29,12 @@ pip install ultralytics
 pip install Flask
 ```
 
+* Cloudinary API
+
+```sh
+pip install cloudinary
+```
+
 * Serverless Framework
 
 ```sh
@@ -40,6 +46,11 @@ npm install -g serverless
 ```sh
 serverless plugin install -n serverless-python-requirements
 serverless plugin install -n serverless-offline
+```
+
+* Others
+```sh
+pip install numpy==1.24.4 # (it was needed to use version 1.24.4 instead of the latest because of AWS compatibility)
 ```
 ## How to use
 

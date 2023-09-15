@@ -7,14 +7,17 @@ provider:
 
 functions:
   init:
+    ecr:
+      images:
+        acharya-prototype:
+          path: ./
     timeout: 30
     handler: AcharyaMeasuringPrototype.init
     package:
       include:
         - AcharyaMeasuringPrototype.py
         - Utlis.py
-        - Models/
-        - Test Images/
+        - Models/best.pt
     events:
       - http: 
           path: /init 

@@ -12,7 +12,6 @@ cachedPredictionPath = ""
 def drawClassRectangle(img, className, conf, x1, y1, x2, y2, windowDistance):
     label = className + " " + str(conf) + "%"
 
-    print(x1, y1)
     boundingBox = cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
     (text_w, text_h), _ = cv2.getTextSize(
@@ -67,7 +66,6 @@ def getWindowInformation(imageNumber, data):
             newInformation = ""
 
     allExtractedInformation.append(newInformation)
-    print(allExtractedInformation)
     return allExtractedInformation
 
 
@@ -142,24 +140,14 @@ def changeImageID(path, currentId, futureID, initialString):
         if any(_fileName.endswith(extension) or _fileName.endswith(extension.upper()) for extension in _imagesExtensions):
             _thisTextPath = os.path.join(path, _fileName)
 
-            print(initialString)
-            print(_fileName)
-            print(_fileName.startswith(initialString))
-
             if _fileName.startswith(initialString):
                 with open(_thisTextPath, 'r') as file:
                     first_character = file.read(1)
-                    print(currentId)
-                    print(first_character)
-                    print(first_character == currentId)
                     if str(first_character) == currentId:
-                        print("ya")
                         rest_of_content = file.read()
                         rest_of_content[1:]
-                        print(rest_of_content)
 
                         new_content = futureID + rest_of_content
-                        print(new_content)
                         new_file_path = os.path.join(
                             path, _fileName)  # New file path
                         with open(new_file_path, 'w') as new_file:
@@ -178,7 +166,7 @@ def convertBase64ToCV2(image_base64):
 
 
 def convertCV2ToBase64(image):
-    _, image_np = cv2.imencode('.jpg', image)
+    _, image_np = cv2.imencode('.JPG', image)
     image_bytes = image_np.tobytes()
     image_base64 = base64.b64encode(image_bytes).decode('utf-8')
 

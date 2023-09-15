@@ -1,0 +1,9 @@
+Models/bestWallWindow.pt
+Models/yolov8l.pt
+.serverless
+Archived Datasets
+datasets
+Predicted Images
+Raw Images
+runs
+Test Images
