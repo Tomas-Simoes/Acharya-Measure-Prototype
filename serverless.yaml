@@ -6,12 +6,12 @@ provider:
   region: eu-west-1
 
 functions:
-  init:
-    ecr:
-      images:
-        acharya-prototype:
-          path: ./
-    timeout: 30
+  #init:
+  #  ecr:
+  #    images:
+  #      acharya-prototype:
+  #        path: ./
+  #  timeout: 30
     handler: AcharyaMeasuringPrototype.init
     package:
       include:

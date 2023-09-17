@@ -1,18 +1,16 @@
-FROM python:3.11.5
+FROM public.ecr.aws/lambda/python:3.11.2023.09.12.11
 
 WORKDIR /app
 
 COPY . /app
 
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    && rm -rf /var/lib/apt/lists/*
-
-
 RUN pip install --upgrade pip
+
+RUN pip cache purge
+RUN pip install 'ultralytics[yolo]~=8.0.147'
 RUN pip install -r requirements.txt
 
 EXPOSE 3000
 
 
-CMD ["python", "AcharyaMeasuringPrototype.py"]
+CMD [ "AcharyaMeasuringPrototype.init" ]

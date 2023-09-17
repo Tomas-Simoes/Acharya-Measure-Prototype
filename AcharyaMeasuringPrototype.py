@@ -63,7 +63,11 @@ cloudinary.config(
 )
 
 
+@app.route("/")
 def init(event, context):
+    if serverless:
+        print("Running prototype in serverless mode.")
+
     with app.app_context():
         try:
             imageToPredict = fetchDatabase()
@@ -114,6 +118,7 @@ def init(event, context):
             }
 
 
+@app.route("/health")
 def health(event, context):
     print("The server is healthy.")
 
