@@ -5,7 +5,7 @@ WORKDIR /app
 COPY Models/best.pt /app
 COPY AcharyaMeasuringPrototype.py /app
 COPY Utlis.py /app
-
+COPY requirements.txt /app
 
 RUN pip install --upgrade pip
 

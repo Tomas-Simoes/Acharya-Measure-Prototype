@@ -1,4 +1,4 @@
-service: acharya-ml
+service: acharya-test-ml
 provider:
   name: aws
   runtime: python3.8
@@ -20,19 +20,26 @@ provider:
                 - Ref: AWS::AccountId
                 - 'repository/*'
 plugins:
+# - serverless-python-requirements
   - serverless-offline
-  - serverless-python-requirements
+
 custom:
   pythonRequirements:
     dockerizePip: true
+  cors:
+    origins:
+      - 'http://localhost:8080'
+    headers:
+      - Content-Type
+    allowCredentials: true
 
 functions:
   main:
-    image: 550512796301.dkr.ecr.eu-west-1.amazonaws.com/acharya-prototype-ml:latest
+    image: 550512796301.dkr.ecr.eu-west-1.amazonaws.com/acharya-prototype-ml:test
     timeout: 900
     events:
       - http: 
-          path: /init 
+          path: /test 
           method: POST
   #  timeout: 30
   #  handler: AcharyaMeasuringPrototype.init

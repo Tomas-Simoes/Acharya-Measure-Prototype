@@ -47,14 +47,12 @@ cloudinaryFolder = "acharya-prototype-test"
 cloudinaryFileName = "4_ykz60d"
 
 # ? Global Variables
-
 allImages = []
 testImagesData = []
 cachedMousePositionX = -1
 cachedMousePositionY = -1
 recognitionResults = None
 
-app = Flask(__name__)
 
 cloudinary.config(
     cloud_name="acharya",
@@ -63,67 +61,88 @@ cloudinary.config(
 )
 
 
-@app.route("/")
 def init(event, context):
     if serverless:
         print("Running prototype in serverless mode.")
 
-    with app.app_context():
-        try:
-            imageToPredict = fetchDatabase()
+    response = {
+        'message': 'Image was not successfully processed.',
+        'result': None
+    }
 
-            if imageToPredict is None:
-                response = {
-                    'message': 'Image was not successfully processed.',
-                    'result': None
-                }
+    try:
+        imageToPredict = fetchDatabase()
 
-                return {
-                    "statusCode": 200,
-                    "headers": {
-                        'Content-Type': "application/json"
-                    },
-                    "body": json.dumps(response)
-                }
-
-            imageAfterPrediction = startServerlessPrototype(imageToPredict)
-
-            if imageToPredict is not None and imageAfterPrediction.shape[0] > 0 and imageAfterPrediction.shape[1] > 0 and imageAfterPrediction.shape[2] > 0:
-                print("This image is valid for base64 conversion.")
-            else:
-                print("This image is not valid for base64 conversion.")
-
-            imageAfterPrediction_base64 = utlis.convertCV2ToBase64(
-                imageAfterPrediction)
-
+        if imageToPredict is None:
             response = {
-                'message': 'Image processed successfully.',
-                'result': imageAfterPrediction_base64
+                'message': 'Image was not successfully processed.',
+                'result': None
             }
 
             return {
                 "statusCode": 200,
                 "headers": {
+                    "Access-Control-Allow-Origin": "http://localhost:8080",
+                    "Access-Control-Allow-Credentials": True,
+                    "Access-Control-Allow-Headers": "Origin, Content-Type, Credentials",
+                    "Access-Control-Allow-Methods": "POST, GET,",
                     'Content-Type': "application/json"
                 },
                 "body": json.dumps(response)
             }
-        except Exception as e:
-            return {
-                'statusCode': 500,
-                'headers': {
-                    'Content-Type': 'application/json',
-                },
-                'body': json.dumps(e)
-            }
+
+        imageAfterPrediction = startServerlessPrototype(imageToPredict)
+
+        if imageToPredict is not None and imageAfterPrediction.shape[0] > 0 and imageAfterPrediction.shape[1] > 0 and imageAfterPrediction.shape[2] > 0:
+            print("This image is valid for base64 conversion.")
+        else:
+            print("This image is not valid for base64 conversion.")
+
+        imageAfterPrediction_base64 = utlis.convertCV2ToBase64(
+            imageAfterPrediction)
+
+        response = {
+            'message': 'Image processed successfully.',
+            'result': imageAfterPrediction_base64
+        }
+
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Credentials": True,
+                "Access-Control-Allow-Headers": "Origin, Content-Type, Credentials",
+                "Access-Control-Allow-Methods": "POST, GET",
+                'Content-Type': "application/json"
+            },
+            "body": json.dumps(response)
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'headers': {
+                "Access-Control-Allow-Origin": "http://localhost:8080",
+                "Access-Control-Allow-Credentials": True,
+                "Access-Control-Allow-Headers": "Origin, Content-Type, Credentials",
+                "Access-Control-Allow-Methods": "POST, GET",
+                'Content-Type': 'application/json',
+            },
+            'body': json.dumps(e)
+        }
 
 
-@app.route("/health")
 def health(event, context):
     print("The server is healthy.")
 
     return {
         'statusCode': 200,
+        'headers': {
+            "Access-Control-Allow-Origin": "http://localhost:8080",
+            "Access-Control-Allow-Credentials": True,
+            # "Access-Control-Allow-Headers: Origin, Content-Type, Credentials",
+            # "Access-Control-Allow-Methods: POST, GET",
+            "Content-Type": "application/json",
+        },
         'body': json.dumps({'message': 'The server is healthy.'})
     }
 
