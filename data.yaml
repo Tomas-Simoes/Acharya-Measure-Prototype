@@ -1,4 +1,4 @@
 train: /Users/pedro/Documents/GitHub/Acharya-Measure-Prototype/datasets/train/images
 val: /Users/pedro/Documents/GitHub/Acharya-Measure-Prototype/datasets/val/images
-nc: 2
-names: ['wall', 'window']
+nc: 3
+names: ['wall', 'window','wall']

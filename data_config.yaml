@@ -1,0 +1,8 @@
+colors:
+- [220, 80, 111]
+- [126, 211, 33]
+- [202, 28, 112]
+names: ['window', 'floor', 'Walls']
+nc: 3
+train: /Users/pedro/Documents/GitHub/Acharya-Measure-Prototype/datasets/train/images
+val: /Users/pedro/Documents/GitHub/Acharya-Measure-Prototype/datasets/val/images

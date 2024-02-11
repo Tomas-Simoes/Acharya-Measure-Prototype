@@ -1,0 +1,7 @@
+# Ignore large model files tracked by Git LFS
+Models/best.pt
+Models/bestWallWindow.pt
+Models/best_old.pt
+Models/yolov8l.pt
+runs/detect/train*/weights/*.pt
+yolov8n.pt
