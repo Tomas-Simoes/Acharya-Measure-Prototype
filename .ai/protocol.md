@@ -128,17 +128,19 @@ Types: `feat | fix | refactor | style | test | docs | chore`
 | **Preview / Staging** | Auto-deployed by Vercel/Netlify when you push to `dev` | ✅ Yes — safe for testing and sharing |
 | **Production** | The live public URL (`*.com`, `*.vercel.app` without preview prefix) | 🚫 NO — Pedro only |
 
-### Local Development (✅ Allowed)
+### Local Development (⚠️ Only if Pedro asks)
 - `npm run dev` / `next dev` / `vercel dev`
 - `npm start` (if it starts a local server)
 - Any command that runs on `localhost:*` or `127.0.0.1:*`
-- These are PRIVATE to your machine. Safe to run anytime.
+- **DEFAULT: Do NOT run local dev server unless Pedro explicitly says "test locally" or "run local server."**
+- Local is private to your machine, but preview is preferred for testing.
 
-### Preview / Staging (✅ Allowed)
-- Pushing to `dev` triggers automatic preview deployment
-- Vercel gives you a URL like `https://project-git-dev-username.vercel.app`
-- Netlify gives you a deploy preview URL
-- Test here. Share this URL with Pedro for review.
+### Preview / Staging (✅ Default — always use this)
+- Push to `dev` → platform auto-deploys to preview
+- Vercel: `https://project-git-dev-username.vercel.app`
+- Netlify: deploy preview URL
+- **This is the standard testing environment. Use it by default.**
+- Test here. Share the preview URL with Pedro for review.
 
 ### Production (🚫 FORBIDDEN)
 - The live public URL that users see
@@ -150,8 +152,8 @@ Types: `feat | fix | refactor | style | test | docs | chore`
 ### Agents MUST do this:
 - Push to `dev` after every commit
 - Let the platform auto-deploy `dev` to a preview URL
-- Test on **localhost** during development
-- Test on **preview URL** before asking Pedro to review
+- Test on **preview URL** by default
+- Only test on **localhost** if Pedro explicitly asks for local testing
 - NEVER test on the production/live URL
 
 ### If Pedro explicitly says "deploy to production":
