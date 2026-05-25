@@ -142,6 +142,37 @@ Types: `feat | fix | refactor | style | test | docs | chore`
 
 ---
 
+## 🚀 Deployment Rules — Where Code Goes Live
+
+| Branch | Environment | Deploy Action |
+|--------|-------------|---------------|
+| `dev` / feature branches | Preview / Staging | ✅ Auto-push after commit. Let Vercel/Netlify auto-deploy preview. |
+| `main` / `master` | Production | 🚫 AGENT NEVER DEPLOYS. Pedro only. |
+
+### Agents are FORBIDDEN from running these commands:
+- `vercel --prod`
+- `npm run deploy` (if it targets production)
+- `npx vercel --prod`
+- Any CLI command with `--prod`, `--production`, or that deploys to the live URL
+- Changing the production branch in Vercel/Netlify dashboard from `main` to `dev`
+
+### Agents MUST do this:
+- Push to `dev` after every commit
+- Let the platform auto-deploy `dev` to a preview URL
+- Test ONLY on the preview/staging URL
+- NEVER test on the production/live URL
+
+### If Pedro explicitly says "deploy to production":
+1. Confirm back: "You want me to deploy branch `<branch>` to production?"
+2. Wait for Pedro to confirm with "yes"
+3. Run the production deploy command
+4. Verify the live site works
+5. Report back to Pedro with the live URL
+
+**If you are unsure whether a command deploys to production: STOP and ask Pedro.**
+
+---
+
 ## 📚 Learning Protocol
 
 When you discover a pattern or solve a novel problem:
@@ -188,3 +219,9 @@ Then reply: **"✓ Session saved."** and stop.
 | `metrics.md` | Session data, what approaches work best |
 
 These are Pedro's memory across all AI tools. Stale files = broken context = wasted sessions.
+
+---
+
+## 📁 LOCAL PROJECT RULES
+
+Read `.ai/protocol.md` in this folder for project-specific rules and overrides.
