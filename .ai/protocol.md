@@ -122,22 +122,36 @@ Types: `feat | fix | refactor | style | test | docs | chore`
 
 ## 🚀 Deployment Rules — Where Code Goes Live
 
-| Branch | Environment | Deploy Action |
-|--------|-------------|---------------|
-| `dev` / feature branches | Preview / Staging | ✅ Auto-push after commit. Let Vercel/Netlify auto-deploy preview. |
-| `main` / `master` | Production | 🚫 AGENT NEVER DEPLOYS. Pedro only. |
+| Environment | What it is | Can agent use it? |
+|-------------|-----------|-------------------|
+| **Localhost** | `npm run dev`, `next dev`, `vercel dev` — runs on YOUR machine only | ✅ Yes — safe for development and testing |
+| **Preview / Staging** | Auto-deployed by Vercel/Netlify when you push to `dev` | ✅ Yes — safe for testing and sharing |
+| **Production** | The live public URL (`*.com`, `*.vercel.app` without preview prefix) | 🚫 NO — Pedro only |
 
-### Agents are FORBIDDEN from running these commands:
-- `vercel --prod`
-- `npm run deploy` (if it targets production)
-- `npx vercel --prod`
-- Any CLI command with `--prod`, `--production`, or that deploys to the live URL
-- Changing the production branch in Vercel/Netlify dashboard from `main` to `dev`
+### Local Development (✅ Allowed)
+- `npm run dev` / `next dev` / `vercel dev`
+- `npm start` (if it starts a local server)
+- Any command that runs on `localhost:*` or `127.0.0.1:*`
+- These are PRIVATE to your machine. Safe to run anytime.
+
+### Preview / Staging (✅ Allowed)
+- Pushing to `dev` triggers automatic preview deployment
+- Vercel gives you a URL like `https://project-git-dev-username.vercel.app`
+- Netlify gives you a deploy preview URL
+- Test here. Share this URL with Pedro for review.
+
+### Production (🚫 FORBIDDEN)
+- The live public URL that users see
+- Vercel: `vercel --prod`
+- Netlify: `netlify deploy --prod`
+- Any command with `--prod`, `--production`, or that deploys to the live URL
+- Changing the production branch in dashboard from `main` to `dev`
 
 ### Agents MUST do this:
 - Push to `dev` after every commit
 - Let the platform auto-deploy `dev` to a preview URL
-- Test ONLY on the preview/staging URL
+- Test on **localhost** during development
+- Test on **preview URL** before asking Pedro to review
 - NEVER test on the production/live URL
 
 ### If Pedro explicitly says "deploy to production":
