@@ -1,5 +1,7 @@
 # Acharya Measuring Prototype
 
+**🔹 [Read the published research paper related to this prototype](https://www.mdpi.com/1424-8220/25/21/6744)**  
+
 *disclaimer:* this prototype is outdated and currently not working
 
 This prototype intends to discover the measurements of a house from images taken inside it through recognition of reference points with machine learning and with the aid of calculations and geometric techniques.
